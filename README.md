@@ -1,7 +1,6 @@
 # Avatar Kotlin Multiplatform (Boring Avatars KMP)
 
-This project is a Kotlin Multiplatform (KMP) library based on the popular [Boring Avatars](https://github.com/boringdesigners/boring-avatars) library. It randomly generates unique avatars completely offline using Compose Multiplatform Canvas.
-
+This project is a Kotlin Multiplatform (KMP) library based on the popular [Boring Avatars](https://github.com/boringdesigners/boring-avatars) library, and it also uses [DiceBear](https://github.com/dicebear/dicebear) as a base for additional styles. It randomly generates unique avatars completely offline using Compose Multiplatform Canvas.
 ## Support
 - Android
 - iOS
@@ -15,7 +14,8 @@ This project is a Kotlin Multiplatform (KMP) library based on the popular [Borin
 - `BAUHAUS`: Minimalist geometric shapes.
 - `RING`: Colorful concentric rings.
 - `PIXEL`: 8x8 pixel art.
-
+- `WACKY`: Playful wacky characters based on DiceBear thumbs.
+- `PIXEL_NEUTRAL`: Clean pixel-art faces from DiceBear.
 ## How to use
 
 Add the dependency to your Compose Multiplatform project:
