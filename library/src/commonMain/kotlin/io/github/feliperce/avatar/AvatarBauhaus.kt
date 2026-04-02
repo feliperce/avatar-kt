@@ -57,10 +57,8 @@ fun AvatarBauhaus(
         val scaleFactor = this.size.width / BAUHAUS_SIZE
 
         scale(scaleFactor, pivot = Offset.Zero) {
-            // Background
             drawRect(color = properties[0].color, size = Size(BAUHAUS_SIZE, BAUHAUS_SIZE))
 
-            // Rectangle
             val p1 = properties[1]
             translate(p1.translateX, p1.translateY) {
                 rotate(p1.rotate, pivot = Offset(BAUHAUS_SIZE / 2, BAUHAUS_SIZE / 2)) {
@@ -72,7 +70,6 @@ fun AvatarBauhaus(
                 }
             }
 
-            // Circle
             val p2 = properties[2]
             translate(p2.translateX, p2.translateY) {
                 drawCircle(
@@ -82,7 +79,6 @@ fun AvatarBauhaus(
                 )
             }
 
-            // Line
             val p3 = properties[3]
             translate(p3.translateX, p3.translateY) {
                 rotate(p3.rotate, pivot = Offset(BAUHAUS_SIZE / 2, BAUHAUS_SIZE / 2)) {
