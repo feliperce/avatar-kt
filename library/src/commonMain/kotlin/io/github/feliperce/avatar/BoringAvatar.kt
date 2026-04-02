@@ -10,10 +10,23 @@ import androidx.compose.ui.unit.dp
 import io.github.feliperce.avatar.variants.*
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * Defines the available visual variants for the BoringAvatar.
+ */
 enum class AvatarVariant {
     BEAM, MARBLE, SUNSET, BAUHAUS, RING, PIXEL, EMOJI, WACKY, PIXEL_NEUTRAL, PIXEL_ART, PIXEL_ANIMALS
 }
 
+/**
+ * A highly customizable Composable to generate visually appealing avatars based on a name hash or direct values.
+ *
+ * @param name The input string used to generate the deterministic avatar output.
+ * @param colors The list of colors to be used in the avatar rendering.
+ * @param variant The type of avatar pattern to generate. Default is [AvatarVariant.BEAM].
+ * @param size The uniform width and height of the avatar. Default is 40.dp.
+ * @param shape The clipping shape of the avatar bounding box. Default is [CircleShape].
+ * @param modifier Additional compose modifiers for the avatar container.
+ */
 @Composable
 fun BoringAvatar(
     name: String,

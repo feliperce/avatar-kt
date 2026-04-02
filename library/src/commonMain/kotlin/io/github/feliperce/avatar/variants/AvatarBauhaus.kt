@@ -44,6 +44,16 @@ internal fun generateBauhausData(name: String, colors: List<Color>): List<Bauhau
     }
 }
 
+/**
+ * Renders the Bauhaus variant of BoringAvatar.
+ * It uses abstract geometric shapes in bold translated/rotated configurations inspired by Bauhaus art.
+ *
+ * @param name The generated hash base string.
+ * @param colors The color palette to pick from.
+ * @param size The size of the avatar.
+ * @param shape The clipping shape for the canvas.
+ * @param modifier Additional compose modifiers.
+ */
 @Composable
 fun AvatarBauhaus(
     name: String,

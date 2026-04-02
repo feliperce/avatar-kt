@@ -234,6 +234,16 @@ private val pixelGlassesPaths = listOf(
     )
 
 
+/**
+ * Renders the PixelNeutral variant of BoringAvatar.
+ * Generates an 8-bit style portrait with combinable eyes, mouth, and optional glasses on a solid skin color.
+ *
+ * @param name The generated hash base string.
+ * @param colors The color palette to pick from.
+ * @param size The size of the avatar.
+ * @param shape The clipping shape for the canvas.
+ * @param modifier Additional compose modifiers.
+ */
 @Composable
 internal fun AvatarPixelNeutral(
     name: String,
@@ -256,7 +266,6 @@ internal fun AvatarPixelNeutral(
     val eyesColor = Color.Black
     val mouthColor = Color.Black
 
-    // viewBox="0 0 14 14"
     Box(
         modifier = modifier
             .size(size)
@@ -266,7 +275,6 @@ internal fun AvatarPixelNeutral(
             val scaleX = this.size.width / 14f
             val scaleY = this.size.height / 14f
 
-            // Background skin color filling 14x14
             drawRect(color = skinColor)
 
             fun drawSvgPaths(paths: List<SvgPath>, dynamicColor: Color) {

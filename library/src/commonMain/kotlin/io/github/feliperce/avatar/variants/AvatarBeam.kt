@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -68,6 +69,16 @@ internal fun generateBeamData(name: String, colors: List<Color>): BeamData {
     )
 }
 
+/**
+ * Renders the Beam variant of BoringAvatar.
+ * It uses geometric shapes and specific transformations to create a unique minimalist face based on the name hash.
+ * 
+ * @param name The generated hash base string.
+ * @param colors The color palette to pick from.
+ * @param size The size of the avatar.
+ * @param shape The clipping shape for the canvas.
+ * @param modifier Additional compose modifiers.
+ */
 @Composable
 fun AvatarBeam(
     name: String,
@@ -113,7 +124,7 @@ fun AvatarBeam(
                         val path = Path().apply {
                             moveTo(13f, 19f + data.mouthSpread)
                             arcTo(
-                                rect = androidx.compose.ui.geometry.Rect(
+                                rect = Rect(
                                     left = 13f,
                                     top = 18.25f + data.mouthSpread,
                                     right = 23f,

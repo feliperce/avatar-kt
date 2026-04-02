@@ -160,6 +160,16 @@ private val wackyShapePaths = listOf(
     ),
 )
 
+/**
+ * Renders the Wacky variant of BoringAvatar.
+ * It combines randomized SVG paths for eyes, mouth, and face shape to create a playful and unique character.
+ *
+ * @param name The generated hash base string.
+ * @param colors The color palette to pick from.
+ * @param size The size of the avatar.
+ * @param shape The clipping shape for the canvas.
+ * @param modifier Additional compose modifiers.
+ */
 @Composable
 internal fun AvatarWacky(
     name: String,

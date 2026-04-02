@@ -28,6 +28,16 @@ internal fun generatePixelColors(name: String, colors: List<Color>): List<Color>
     }
 }
 
+/**
+ * Renders the Pixel variant of BoringAvatar.
+ * It generates a fixed 8x8 grid map representing a mosaic or pixel pattern.
+ *
+ * @param name The generated hash base string.
+ * @param colors The color palette to pick from.
+ * @param size The size of the avatar.
+ * @param shape The clipping shape for the canvas.
+ * @param modifier Additional compose modifiers.
+ */
 @Composable
 fun AvatarPixel(
     name: String,

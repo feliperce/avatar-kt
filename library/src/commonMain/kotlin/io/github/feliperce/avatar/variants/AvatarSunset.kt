@@ -28,6 +28,16 @@ internal fun generateSunsetColors(name: String, colors: List<Color>): List<Color
     }
 }
 
+/**
+ * Renders the Sunset variant of BoringAvatar.
+ * It uses simple vertical gradients to simulate a relaxing sunset scene based on the color palette.
+ *
+ * @param name The generated hash base string.
+ * @param colors The color palette to pick from.
+ * @param size The size of the avatar.
+ * @param shape The clipping shape for the canvas.
+ * @param modifier Additional compose modifiers.
+ */
 @Composable
 fun AvatarSunset(
     name: String,

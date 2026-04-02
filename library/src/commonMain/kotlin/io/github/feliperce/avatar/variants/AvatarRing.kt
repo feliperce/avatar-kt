@@ -40,6 +40,16 @@ internal fun generateRingColors(name: String, colors: List<Color>): List<Color> 
     )
 }
 
+/**
+ * Renders the Ring variant of BoringAvatar.
+ * It uses nested circular and semi-circular strokes to form an abstract ringed pattern.
+ *
+ * @param name The generated hash base string.
+ * @param colors The color palette to pick from.
+ * @param size The size of the avatar.
+ * @param shape The clipping shape for the canvas.
+ * @param modifier Additional compose modifiers.
+ */
 @Composable
 fun AvatarRing(
     name: String,

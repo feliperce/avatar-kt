@@ -497,6 +497,16 @@ private val pixelArtFaceBgPaths = listOf(
     SvgPath(d = "M4 2h8v1h1v3h1v2h-1v3h-1v1H4v-1H3V8H2V6h1V3h1V2Z", color = Color(0x19FFFFFF), fillType = PathFillType.NonZero)
 )
 
+/**
+ * Renders the PixelArt variant of BoringAvatar.
+ * Generates an 8-bit style portrait composed of multiple layers like face, mouth, eyes, clothing, hair, etc.
+ *
+ * @param seed The generated hash base string.
+ * @param modifier Additional compose modifiers.
+ * @param size The size of the avatar.
+ * @param shape The clipping shape for the canvas.
+ * @param backgroundColors The color palette to pick from.
+ */
 @Composable
 fun AvatarPixelArt(
     seed: String,
@@ -518,7 +528,6 @@ fun AvatarPixelArt(
     val hatIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "hat")) % pixelArtHatPaths.size }
     val mouthIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "mouth")) % pixelArtMouthPaths.size }
 
-    // Render configuration
     val viewPortSize = 16f
 
     Box(
@@ -546,7 +555,6 @@ fun AvatarPixelArt(
                 }
             }
 
-            // Order: Face -> Mouth -> Eyes -> Clothing -> Beard -> Hair -> Glasses -> Hat -> Accessories
             drawList(pixelArtFaceBgPaths, true)
             drawList(pixelArtMouthPaths[mouthIndex], false)
             drawList(pixelArtEyesPaths[eyeIndex], false)
