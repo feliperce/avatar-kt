@@ -11,7 +11,7 @@ import io.github.feliperce.avatar.variants.*
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class AvatarVariant {
-    BEAM, MARBLE, SUNSET, BAUHAUS, RING, PIXEL, EMOJI, WACKY, PIXEL_NEUTRAL
+    BEAM, MARBLE, SUNSET, BAUHAUS, RING, PIXEL, EMOJI, WACKY, PIXEL_NEUTRAL, PIXEL_ART
 }
 
 @Composable
@@ -33,6 +33,7 @@ fun BoringAvatar(
         AvatarVariant.EMOJI -> AvatarEmoji(name, colors, size, shape, modifier)
         AvatarVariant.WACKY -> AvatarWacky(name, colors, size, shape, modifier)
         AvatarVariant.PIXEL_NEUTRAL -> AvatarPixelNeutral(name, colors, size, shape, modifier)
+        AvatarVariant.PIXEL_ART -> AvatarPixelArt(name, modifier, size, shape, colors)
     }
 }
 

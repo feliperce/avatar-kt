@@ -16,6 +16,7 @@ This project is a Kotlin Multiplatform (KMP) library based on the popular [Borin
 - `PIXEL`: 8x8 pixel art.
 - `WACKY`: Playful wacky characters based on DiceBear thumbs.
 - `PIXEL_NEUTRAL`: Clean pixel-art faces from DiceBear.
+- `PIXEL_ART`: Full pixel-art faces with hair, hats and accessories (feat. a Cowboy hat!).
 ## How to use
 
 Add the dependency to your Compose Multiplatform project:
