@@ -1,4 +1,4 @@
-package io.github.feliperce.avatar
+package io.github.feliperce.avatar.util
 
 import androidx.compose.ui.graphics.Color
 import kotlin.math.PI
@@ -7,7 +7,7 @@ import kotlin.math.atan2
 import kotlin.math.floor
 import kotlin.math.pow
 
-object AvatarUtils {
+internal object AvatarUtils {
     fun hashCode(name: String): Int {
         var hash = 0
         for (character in name) {

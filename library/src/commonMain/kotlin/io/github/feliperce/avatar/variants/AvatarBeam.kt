@@ -1,4 +1,4 @@
-package io.github.feliperce.avatar
+package io.github.feliperce.avatar.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
@@ -11,8 +11,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.scale
@@ -20,11 +19,12 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import io.github.feliperce.avatar.util.AvatarUtils
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private const val SIZE = 36f
 
-data class BeamData(
+internal data class BeamData(
     val wrapperColor: Color,
     val faceColor: Color,
     val backgroundColor: Color,
@@ -41,7 +41,7 @@ data class BeamData(
     val faceTranslateY: Float
 )
 
-fun generateBeamData(name: String, colors: List<Color>): BeamData {
+internal fun generateBeamData(name: String, colors: List<Color>): BeamData {
     val numFromName = AvatarUtils.hashCode(name)
     val range = colors.size
     val wrapperColor = AvatarUtils.getRandomColor(numFromName, colors, range)
@@ -73,12 +73,10 @@ fun AvatarBeam(
     name: String,
     colors: List<Color>,
     size: Dp = 40.dp,
-    square: Boolean = false,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val data = remember(name, colors) { generateBeamData(name, colors) }
-    
-    val shape = if (square) RoundedCornerShape(0.dp) else CircleShape
 
     Canvas(modifier = modifier.size(size).clip(shape)) {
         val scaleFactor = size.toPx() / SIZE
@@ -145,4 +143,13 @@ fun AvatarBeam(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun AvatarBeamPreview() {
+    AvatarBeam(
+        name = "Preview",
+        colors = listOf(Color(0xFF92A1C6), Color(0xFF146A7C), Color(0xFFF0AB3D), Color(0xFFC271B4), Color(0xFFC20D90))
+    )
 }

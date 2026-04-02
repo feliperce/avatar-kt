@@ -1,9 +1,8 @@
-package io.github.feliperce.avatar
+package io.github.feliperce.avatar.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -12,6 +11,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import io.github.feliperce.avatar.util.AvatarUtils
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.unit.Dp
@@ -19,7 +21,7 @@ import androidx.compose.ui.unit.dp
 
 private const val RING_SIZE = 90f
 
-fun generateRingColors(name: String, colors: List<Color>): List<Color> {
+internal fun generateRingColors(name: String, colors: List<Color>): List<Color> {
     val numFromName = AvatarUtils.hashCode(name)
     val range = colors.size
     val colorsShuffle = List(5) { i ->
@@ -43,11 +45,10 @@ fun AvatarRing(
     name: String,
     colors: List<Color>,
     size: Dp = 40.dp,
-    square: Boolean = false,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val ringColors = remember(name, colors) { generateRingColors(name, colors) }
-    val shape = if (square) RoundedCornerShape(0.dp) else CircleShape
 
     Canvas(modifier = modifier.size(size).clip(shape)) {
         val scaleFactor = this.size.width / RING_SIZE
@@ -101,4 +102,13 @@ fun AvatarRing(
             drawCircle(color = ringColors[8], radius = 23f, center = Offset(45f, 45f))
         }
     }
+}
+
+@Preview
+@Composable
+private fun AvatarRingPreview() {
+    AvatarRing(
+        name = "Preview",
+        colors = listOf(Color(0xFF92A1C6), Color(0xFF146A7C), Color(0xFFF0AB3D), Color(0xFFC271B4), Color(0xFFC20D90))
+    )
 }

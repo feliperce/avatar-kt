@@ -1,9 +1,8 @@
-package io.github.feliperce.avatar
+package io.github.feliperce.avatar.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -11,6 +10,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import io.github.feliperce.avatar.util.AvatarUtils
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
@@ -20,7 +22,7 @@ import androidx.compose.ui.unit.dp
 private const val BAUHAUS_SIZE = 80f
 private const val BAUHAUS_ELEMENTS = 4
 
-data class BauhausElement(
+internal data class BauhausElement(
     val color: Color,
     val translateX: Float,
     val translateY: Float,
@@ -28,7 +30,7 @@ data class BauhausElement(
     val isSquare: Boolean
 )
 
-fun generateBauhausData(name: String, colors: List<Color>): List<BauhausElement> {
+internal fun generateBauhausData(name: String, colors: List<Color>): List<BauhausElement> {
     val numFromName = AvatarUtils.hashCode(name)
     val range = colors.size
     return List(BAUHAUS_ELEMENTS) { i ->
@@ -47,11 +49,10 @@ fun AvatarBauhaus(
     name: String,
     colors: List<Color>,
     size: Dp = 40.dp,
-    square: Boolean = false,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val properties = remember(name, colors) { generateBauhausData(name, colors) }
-    val shape = if (square) RoundedCornerShape(0.dp) else CircleShape
 
     Canvas(modifier = modifier.size(size).clip(shape)) {
         val scaleFactor = this.size.width / BAUHAUS_SIZE
@@ -92,4 +93,13 @@ fun AvatarBauhaus(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun AvatarBauhausPreview() {
+    AvatarBauhaus(
+        name = "Preview",
+        colors = listOf(Color(0xFF92A1C6), Color(0xFF146A7C), Color(0xFFF0AB3D), Color(0xFFC271B4), Color(0xFFC20D90))
+    )
 }

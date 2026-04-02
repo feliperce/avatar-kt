@@ -1,9 +1,8 @@
-package io.github.feliperce.avatar
+package io.github.feliperce.avatar.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -11,6 +10,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import io.github.feliperce.avatar.util.AvatarUtils
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -18,7 +20,7 @@ import androidx.compose.ui.unit.dp
 private const val PIXEL_SIZE = 80f
 private const val PIXEL_ELEMENTS = 64
 
-fun generatePixelColors(name: String, colors: List<Color>): List<Color> {
+internal fun generatePixelColors(name: String, colors: List<Color>): List<Color> {
     val numFromName = AvatarUtils.hashCode(name)
     val range = colors.size
     return List(PIXEL_ELEMENTS) { i ->
@@ -31,11 +33,10 @@ fun AvatarPixel(
     name: String,
     colors: List<Color>,
     size: Dp = 40.dp,
-    square: Boolean = false,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val pixelColors = remember(name, colors) { generatePixelColors(name, colors) }
-    val shape = if (square) RoundedCornerShape(0.dp) else CircleShape
 
     Canvas(modifier = modifier.size(size).clip(shape)) {
         val scaleFactor = this.size.width / PIXEL_SIZE
@@ -62,4 +63,13 @@ fun AvatarPixel(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun AvatarPixelPreview() {
+    AvatarPixel(
+        name = "Preview",
+        colors = listOf(Color(0xFF92A1C6), Color(0xFF146A7C), Color(0xFFF0AB3D), Color(0xFFC271B4), Color(0xFFC20D90))
+    )
 }

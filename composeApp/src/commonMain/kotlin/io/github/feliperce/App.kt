@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -85,7 +86,7 @@ fun App() {
                         OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
-                            label = { Text("Nome / Seed") },
+                            label = { Text("Name / Seed") },
                             modifier = Modifier.weight(1f),
                             singleLine = true
                         )
@@ -98,7 +99,7 @@ fun App() {
                     }
 
                     Column {
-                        Text("Tamanho: ${size.toInt()}dp", style = MaterialTheme.typography.bodyMedium)
+                        Text("Size: ${size.toInt()}dp", style = MaterialTheme.typography.bodyMedium)
                         Slider(
                             value = size,
                             onValueChange = { size = it },
@@ -111,12 +112,12 @@ fun App() {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Quadrado?")
+                        Text("Square?")
                         Switch(checked = isSquare, onCheckedChange = { isSquare = it })
                     }
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Paleta de Cores", style = MaterialTheme.typography.bodyMedium)
+                        Text("Color Palette", style = MaterialTheme.typography.bodyMedium)
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -144,7 +145,7 @@ fun App() {
                 }
             }
 
-            Text("Variantes", style = MaterialTheme.typography.titleLarge)
+            Text("Variants", style = MaterialTheme.typography.titleLarge)
 
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -161,7 +162,7 @@ fun App() {
                             colors = palettes[selectedPaletteIndex],
                             size = size.dp,
                             variant = variant,
-                            square = isSquare
+                            shape = if (isSquare) RoundedCornerShape(0.dp) else CircleShape
                         )
                         Text(variant.name, style = MaterialTheme.typography.labelMedium)
                     }

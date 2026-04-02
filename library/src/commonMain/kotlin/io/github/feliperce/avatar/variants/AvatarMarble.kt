@@ -1,9 +1,8 @@
-package io.github.feliperce.avatar
+package io.github.feliperce.avatar.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -13,6 +12,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.rotate
@@ -21,11 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.graphicsLayer
+import io.github.feliperce.avatar.util.AvatarUtils
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private const val MARBLE_SIZE = 80f
 private const val ELEMENTS = 3
 
-data class MarbleElement(
+internal data class MarbleElement(
     val color: Color,
     val translateX: Float,
     val translateY: Float,
@@ -33,7 +35,7 @@ data class MarbleElement(
     val rotate: Float
 )
 
-fun generateMarbleData(name: String, colors: List<Color>): List<MarbleElement> {
+internal fun generateMarbleData(name: String, colors: List<Color>): List<MarbleElement> {
     val numFromName = AvatarUtils.hashCode(name)
     val range = colors.size
     return List(ELEMENTS) { i ->
@@ -52,11 +54,10 @@ fun AvatarMarble(
     name: String,
     colors: List<Color>,
     size: Dp = 40.dp,
-    square: Boolean = false,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val properties = remember(name, colors) { generateMarbleData(name, colors) }
-    val shape = if (square) RoundedCornerShape(0.dp) else CircleShape
 
     val path1 = remember {
         PathParser().parsePathString("M32.414 59.35L50.376 70.5H72.5v-71H33.728L26.5 13.381l19.057 27.08L32.414 59.35z").toPath()
@@ -100,4 +101,13 @@ fun AvatarMarble(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun AvatarMarblePreview() {
+    AvatarMarble(
+        name = "Preview",
+        colors = listOf(Color(0xFF92A1C6), Color(0xFF146A7C), Color(0xFFF0AB3D), Color(0xFFC271B4), Color(0xFFC20D90))
+    )
 }

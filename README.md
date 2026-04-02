@@ -1,31 +1,31 @@
 # Avatar Kotlin Multiplatform (Boring Avatars KMP)
 
-Este projeto é uma biblioteca Kotlin Multiplatform (KMP) baseada na popular biblioteca [Boring Avatars](https://github.com/boringdesigners/boring-avatars). Ela gera avatares aleatórios e únicos de forma offline usando Compose Multiplatform Canvas.
+This project is a Kotlin Multiplatform (KMP) library based on the popular [Boring Avatars](https://github.com/boringdesigners/boring-avatars) library. It randomly generates unique avatars completely offline using Compose Multiplatform Canvas.
 
-## Suporte
+## Support
 - Android
 - iOS
 - Desktop (JVM)
 - Web (Wasm & JS)
 
-## Variantes Disponíveis
-- `BEAM`: Rostos amigáveis com formas geométricas.
-- `MARBLE`: Padrões orgânicos e abstratos com gradientes.
-- `SUNSET`: Gradientes suaves de pôr do sol.
-- `BAUHAUS`: Formas geométricas minimalistas.
-- `RING`: Anéis concêntricos coloridos.
-- `PIXEL`: Arte em pixel 8x8.
+## Available Variants
+- `BEAM`: Friendly faces with geometric shapes.
+- `MARBLE`: Organic and abstract patterns with gradients.
+- `SUNSET`: Smooth sunset gradients.
+- `BAUHAUS`: Minimalist geometric shapes.
+- `RING`: Colorful concentric rings.
+- `PIXEL`: 8x8 pixel art.
 
-## Como usar
+## How to use
 
-Adicione a dependência no seu projeto Compose Multiplatform:
+Add the dependency to your Compose Multiplatform project:
 
 ```kotlin
 // commonMain
 implementation(project(":library"))
 ```
 
-Exemplo de uso:
+Usage example:
 
 ```kotlin
 val colors = listOf(
@@ -37,15 +37,15 @@ val colors = listOf(
 )
 
 BoringAvatar(
-    name = "Junie",
+    name = "Abacate",
     colors = colors,
     variant = AvatarVariant.BEAM,
     size = 80.dp
 )
 ```
 
-## Estrutura do Projeto
-- `:library`: O código principal da biblioteca (Canvas-based).
-- `:composeApp`: Aplicativo de exemplo demonstrando todas as variantes.
+## Project Structure
+- `:library`: The main library code (Canvas-based).
+- `:composeApp`: Example application demonstrating all variants.
 
 ---
