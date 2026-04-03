@@ -3,13 +3,17 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.mavenPublish)
 }
+
+group = "io.github.feliperce"
+version = "0.3.0"
 
 kotlin {
     androidTarget {
-        publishLibraryVariants("release", "debug")
+        publishLibraryVariants("release")
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -20,18 +24,18 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm()
-    
+
     js {
         browser()
     }
-    
+
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
         browser()
     }
-    
+
     sourceSets {
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -70,6 +74,40 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+
+    coordinates(group.toString(), "avatarkt", version.toString())
+
+    pom {
+        name.set("Avatar KT")
+        description.set("Kotlin Multiplatform library for generating unique, deterministic avatars using Compose Canvas.")
+        url.set("https://github.com/feliperce/avatar-kt")
+
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
+            }
+        }
+
+        developers {
+            developer {
+                id.set("feliperce")
+                name.set("Felipe Celestino")
+                url.set("https://github.com/feliperce")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/feliperce/avatar-kt")
+            connection.set("scm:git:git://github.com/feliperce/avatar-kt.git")
+            developerConnection.set("scm:git:ssh://git@github.com/feliperce/avatar-kt.git")
+        }
     }
 }
 

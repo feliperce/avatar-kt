@@ -8,6 +8,21 @@ A Kotlin Multiplatform (KMP) library that generates unique, deterministic avatar
 - Desktop (JVM)
 - Web (Wasm & JS)
 
+## Installation
+
+Add the dependency to your `commonMain` source set:
+
+```kotlin
+// build.gradle.kts
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation("io.github.feliperce:avatarkt:0.3.0")
+        }
+    }
+}
+```
+
 ## Available Variants
 - `BEAM`: Friendly faces with geometric shapes (Boring Avatars port).
 - `MARBLE`: Organic abstract patterns with gradients (Boring Avatars port).
@@ -44,5 +59,9 @@ Avatar(
 ```
 
 ## Project Structure
-- `:library`: The main library code (Canvas-based).
+- `:avatarkt`: The main library code (Canvas-based).
 - `:composeApp`: Example application demonstrating all variants.
+
+## License
+
+[MIT](LICENSE)
