@@ -1,4 +1,4 @@
-package io.github.feliperce.avatar
+package io.github.feliperce.avatarkt
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -21,7 +21,7 @@ import org.junit.Test
  * images in the `snapshots/failures/` folder for debugging.
  */
 @OptIn(ExperimentalTestApi::class)
-class BoringAvatarSnapshotTest {
+class AvatarSnapshotTest {
 
     companion object {
         private val DEFAULT_COLORS = listOf(
@@ -186,7 +186,7 @@ class BoringAvatarSnapshotTest {
     @Test
     fun snapshotBeam_RoundedCorner() = runComposeUiTest {
         setContent {
-            BoringAvatar(
+            Avatar(
                 name = "Felipe",
                 colors = DEFAULT_COLORS,
                 variant = AvatarVariant.BEAM,
@@ -206,7 +206,7 @@ class BoringAvatarSnapshotTest {
     @Test
     fun snapshotDeterminism_SameNameProducesSameImage() = runComposeUiTest {
         setContent {
-            BoringAvatar(
+            Avatar(
                 name = "DeterminismTest",
                 colors = DEFAULT_COLORS,
                 variant = AvatarVariant.BEAM,
@@ -225,7 +225,7 @@ class BoringAvatarSnapshotTest {
 
     private fun assertVariantSnapshot(variant: AvatarVariant, name: String) = runComposeUiTest {
         setContent {
-            BoringAvatar(
+            Avatar(
                 name = name,
                 colors = DEFAULT_COLORS,
                 variant = variant,

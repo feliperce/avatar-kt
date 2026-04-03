@@ -1,7 +1,8 @@
-package io.github.feliperce.avatar.variants
+package io.github.feliperce.avatarkt.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -20,7 +21,7 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.github.feliperce.avatar.util.AvatarUtils
+import io.github.feliperce.avatarkt.util.AvatarUtils
 import androidx.compose.ui.tooling.preview.Preview
 
 private data class BeamData(
@@ -47,11 +48,11 @@ private const val SIZE = 36f
  * It uses geometric shapes and specific transformations to create a unique minimalist face based on the name hash.
  */
 @Composable
-fun AvatarBeam(
+internal fun AvatarBeam(
     name: String,
     colors: List<Color>,
-    size: Dp = AvatarUtils.DEFAULT_SIZE,
-    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
+    size: Dp = 40.dp,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }

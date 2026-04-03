@@ -1,4 +1,4 @@
-package io.github.feliperce.avatar.variants
+package io.github.feliperce.avatarkt.variants
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType

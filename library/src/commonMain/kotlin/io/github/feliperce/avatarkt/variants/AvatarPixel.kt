@@ -1,4 +1,4 @@
-package io.github.feliperce.avatar.variants
+package io.github.feliperce.avatarkt.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
@@ -11,11 +11,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import io.github.feliperce.avatar.util.AvatarUtils
+import io.github.feliperce.avatarkt.util.AvatarUtils
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.Preview
 
 private const val PIXEL_SIZE = 80f
 private const val PIXEL_ELEMENTS = 64
@@ -32,11 +32,11 @@ internal fun generatePixelColors(name: String, colors: List<Color>): List<Color>
  * Renders the Pixel variant of BoringAvatar.
  */
 @Composable
-fun AvatarPixel(
+internal fun AvatarPixel(
     name: String,
     colors: List<Color>,
-    size: Dp = AvatarUtils.DEFAULT_SIZE,
-    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
+    size: Dp = 40.dp,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val pixelColors = remember(name, colors) { generatePixelColors(name, colors) }
@@ -68,7 +68,7 @@ fun AvatarPixel(
     }
 }
 
-@PreviewLightDark
+@Preview
 @Composable
 private fun AvatarPixelPreview() {
     AvatarPixel(

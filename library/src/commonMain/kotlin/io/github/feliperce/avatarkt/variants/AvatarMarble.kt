@@ -1,4 +1,4 @@
-package io.github.feliperce.avatar.variants
+package io.github.feliperce.avatarkt.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.graphicsLayer
-import io.github.feliperce.avatar.util.AvatarUtils
+import io.github.feliperce.avatarkt.util.AvatarUtils
 import androidx.compose.ui.tooling.preview.Preview
 
 private const val MARBLE_SIZE = 80f
@@ -36,11 +36,11 @@ internal data class MarbleElement(
 )
 
 @Composable
-fun AvatarMarble(
+internal fun AvatarMarble(
     name: String,
     colors: List<Color>,
-    size: Dp = AvatarUtils.DEFAULT_SIZE,
-    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
+    size: Dp = 40.dp,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }

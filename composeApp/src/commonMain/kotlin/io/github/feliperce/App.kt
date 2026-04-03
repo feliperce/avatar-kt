@@ -34,8 +34,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import io.github.feliperce.avatar.AvatarVariant
-import io.github.feliperce.avatar.BoringAvatar
+import io.github.feliperce.avatarkt.AvatarVariant
+import io.github.feliperce.avatarkt.Avatar
 import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -157,7 +157,7 @@ fun App() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        BoringAvatar(
+                        Avatar(
                             name = name,
                             colors = palettes[selectedPaletteIndex],
                             size = size.dp,

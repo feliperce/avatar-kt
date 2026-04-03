@@ -1,4 +1,4 @@
-package io.github.feliperce.avatar.variants
+package io.github.feliperce.avatarkt.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
-import io.github.feliperce.avatar.util.AvatarUtils
+import io.github.feliperce.avatarkt.util.AvatarUtils
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -21,11 +21,11 @@ private const val SUNSET_SIZE = 80f
 private const val SUNSET_ELEMENTS = 4
 
 @Composable
-fun AvatarSunset(
+internal fun AvatarSunset(
     name: String,
     colors: List<Color>,
-    size: Dp = AvatarUtils.DEFAULT_SIZE,
-    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
+    size: Dp = 40.dp,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }

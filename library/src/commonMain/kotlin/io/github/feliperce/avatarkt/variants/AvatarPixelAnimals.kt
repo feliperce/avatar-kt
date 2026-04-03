@@ -1,7 +1,8 @@
-package io.github.feliperce.avatar.variants
+package io.github.feliperce.avatarkt.variants
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -12,10 +13,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.Shape
-import io.github.feliperce.avatar.util.AvatarUtils
+import io.github.feliperce.avatarkt.util.AvatarUtils
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
 private const val PIXEL_ANIMALS_VIEWBOX = 16f
@@ -105,11 +107,11 @@ private val animalAccessories = listOf(
  * @param backgroundColors The color palette to pick from.
  */
 @Composable
-fun AvatarPixelAnimals(
+internal fun AvatarPixelAnimals(
     name: String,
     colors: List<Color>,
-    size: Dp = AvatarUtils.DEFAULT_SIZE,
-    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
+    size: Dp = 40.dp,
+    shape: Shape = CircleShape,
     modifier: Modifier = Modifier
 ) {
     val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }

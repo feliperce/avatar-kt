@@ -1,4 +1,4 @@
-package io.github.feliperce.avatar
+package io.github.feliperce.avatarkt
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toAwtImage

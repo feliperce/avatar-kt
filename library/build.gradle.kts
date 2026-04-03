@@ -66,7 +66,7 @@ kotlin {
 }
 
 android {
-    namespace = "io.github.feliperce.avatar"
+    namespace = "io.github.feliperce.avatarkt"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()

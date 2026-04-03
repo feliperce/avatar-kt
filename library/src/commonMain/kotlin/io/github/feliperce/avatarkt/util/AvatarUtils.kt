@@ -1,10 +1,6 @@
-package io.github.feliperce.avatar.util
+package io.github.feliperce.avatarkt.util
 
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.pow
@@ -38,12 +34,6 @@ internal data class AvatarContext(
  * It is primarily used to ensure that a given name consistently generates the same avatar colors and shapes.
  */
 internal object AvatarUtils {
-
-    /** Default size for all avatars (40.dp). */
-    val DEFAULT_SIZE: Dp = 40.dp
-
-    /** Default shape for all avatars (CircleShape). */
-    val DEFAULT_SHAPE: Shape = CircleShape
 
     /**
      * Creates a shared [AvatarContext] for a given name and color palette.
