@@ -1,76 +1,79 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM).
+![Kotlin Badge](https://img.shields.io/badge/kotlin-v2.3.20-%237F52FF?logo=kotlin)
+![Compose Badge](https://img.shields.io/badge/compose_multiplatform-v1.10.3-%234285F4?logo=jetpackcompose)
+![Platform Windows Badge](https://img.shields.io/badge/platform-windows-%230078D4?logo=windows)
+![Platform Linux Badge](https://img.shields.io/badge/platform-Linux-%23FCC624?logo=linux)
+![Platform MacOS Badge](https://img.shields.io/badge/platform-macOS-%23000000?logo=macos)
+![Android Badge](https://img.shields.io/badge/platform-Android-%2334A853?logo=android)
+![iOS badge](https://img.shields.io/badge/platform-iOS-23000000?logo=ios&color=%23000000)
+![WebAssembly](https://img.shields.io/badge/platform-WebAssembly-23000000?logo=webassembly&color=%23654FF0)
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+# Avatar KT
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+A Kotlin Multiplatform (KMP) library that generates unique, deterministic avatars completely offline using Compose Multiplatform Canvas. Based on [Boring Avatars](https://github.com/boringdesigners/boring-avatars) and [DiceBear](https://github.com/dicebear/dicebear).
 
-### Build and Run Android Application
+<img width="982" height="388" alt="Captura de tela de 2026-04-02 20-41-57" src="https://github.com/user-attachments/assets/983f92fd-eb33-4433-91de-f06333d69193" />
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
 
-### Build and Run Desktop (JVM) Application
+## Supported Platforms
+- Android
+- iOS
+- Desktop (JVM)
+- Web (Wasm & JS)
 
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
+## Installation
 
-### Build and Run Web Application
+Add the dependency to your `commonMain` source set:
 
-To build and run the development version of the web app, use the run configuration from the run widget
-in your IDE's toolbar or run it directly from the terminal:
-- for the Wasm target (faster, modern browsers):
-  - on macOS/Linux
-    ```shell
-    ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
-    ```
-  - on Windows
-    ```shell
-    .\gradlew.bat :composeApp:wasmJsBrowserDevelopmentRun
-    ```
-- for the JS target (slower, supports older browsers):
-  - on macOS/Linux
-    ```shell
-    ./gradlew :composeApp:jsBrowserDevelopmentRun
-    ```
-  - on Windows
-    ```shell
-    .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
-    ```
+```kotlin
+// build.gradle.kts
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation("io.github.feliperce:avatarkt:0.3.0")
+        }
+    }
+}
+```
 
-### Build and Run iOS Application
+## Available Variants
+- `BEAM`: Friendly faces with geometric shapes (Boring Avatars port).
+- `MARBLE`: Organic abstract patterns with gradients (Boring Avatars port).
+- `SUNSET`: Smooth sunset gradients (Boring Avatars port).
+- `BAUHAUS`: Minimalist geometric shapes (Boring Avatars port).
+- `RING`: Colorful concentric rings (Boring Avatars port).
+- `PIXEL`: 8x8 pixel mosaic (Boring Avatars port).
+- `EMOJI`: Random emoji on a colored background.
+- `WACKY`: Playful characters based on DiceBear thumbs.
+- `PIXEL_NEUTRAL`: Clean pixel-art faces from DiceBear.
+- `PIXEL_ART`: Full pixel-art faces with hair, hats and accessories.
+- `PIXEL_ANIMALS`: Pixel animal avatars.
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+## Usage
 
----
+```kotlin
+// Minimal - uses default colors and BEAM variant
+Avatar(name = "Maria")
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
+// Customized
+Avatar(
+    name = "Maria",
+    colors = listOf(
+        Color(0xFF92A1C6),
+        Color(0xFF146A7C),
+        Color(0xFFF0AB3D),
+        Color(0xFFC271B4),
+        Color(0xFFC20D90)
+    ),
+    variant = AvatarVariant.PIXEL_ART,
+    size = 80.dp,
+    shape = RoundedCornerShape(16.dp)
+)
+```
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
+## Project Structure
+- `:avatarkt`: The main library code (Canvas-based).
+- `:composeApp`: Example application demonstrating all variants.
+
+## License
+
+[MIT](LICENSE)
