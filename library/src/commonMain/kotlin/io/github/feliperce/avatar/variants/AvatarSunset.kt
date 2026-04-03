@@ -13,40 +13,29 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
+import io.github.feliperce.avatar.util.AvatarContext
 import io.github.feliperce.avatar.util.AvatarUtils
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 private const val SUNSET_SIZE = 80f
 private const val SUNSET_ELEMENTS = 4
 
-internal fun generateSunsetColors(name: String, colors: List<Color>): List<Color> {
-    val numFromName = AvatarUtils.hashCode(name)
-    val range = colors.size
-    return List(SUNSET_ELEMENTS) { i ->
-        AvatarUtils.getRandomColor(numFromName + i, colors, range)
-    }
-}
-
-/**
- * Renders the Sunset variant of BoringAvatar.
- * It uses simple vertical gradients to simulate a relaxing sunset scene based on the color palette.
- *
- * @param name The generated hash base string.
- * @param colors The color palette to pick from.
- * @param size The size of the avatar.
- * @param shape The clipping shape for the canvas.
- * @param modifier Additional compose modifiers.
- */
 @Composable
 fun AvatarSunset(
     name: String,
     colors: List<Color>,
-    size: Dp = 40.dp,
-    shape: Shape = CircleShape,
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
     modifier: Modifier = Modifier
 ) {
-    val sunsetColors = remember(name, colors) { generateSunsetColors(name, colors) }
+    val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }
+    
+    val sunsetColors = remember(context) {
+        List(SUNSET_ELEMENTS) { i ->
+            AvatarUtils.getRandomColor(context.numFromName + i, colors, context.range)
+        }
+    }
 
     Canvas(modifier = modifier.size(size).clip(shape)) {
         val scaleFactor = this.size.width / SUNSET_SIZE

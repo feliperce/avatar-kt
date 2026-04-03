@@ -7,19 +7,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import kotlin.math.abs
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.vector.PathParser
-import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.PathParser
+import io.github.feliperce.avatar.util.AvatarContext
 import io.github.feliperce.avatar.util.AvatarUtils
-import kotlin.math.abs
+import androidx.compose.ui.graphics.drawscope.scale
+
+private const val PIXEL_ART_VIEWBOX = 16f
 
 private val pixelArtAccessoriesPaths = listOf(
     emptyList<SvgPath>(),
@@ -509,24 +512,28 @@ private val pixelArtFaceBgPaths = listOf(
  */
 @Composable
 fun AvatarPixelArt(
-    seed: String,
-    modifier: Modifier = Modifier,
-    size: Dp = 40.dp,
-    shape: Shape,
-    backgroundColors: List<Color> = listOf(Color(0xFF92A1C6), Color(0xFF146A7C), Color(0xFFF0AB3D), Color(0xFFC271B4), Color(0xFFC20D90))
+    name: String,
+    colors: List<Color>,
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
+    modifier: Modifier = Modifier
 ) {
-    val bgColor = remember(seed) { AvatarUtils.getRandomColor(AvatarUtils.hashCode(seed), backgroundColors, backgroundColors.size) }
+    val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }
+    val seed = context.numFromName
+    
+    val bgColor = context.getRandomColor()
     val wrapperColors = listOf(Color(0xFFE0B687), Color(0xFFFCCC9D), Color(0xFFC8956A), Color(0xFF9C6A46))
-    val wrapperColor = remember(seed) { AvatarUtils.getRandomColor(AvatarUtils.hashCode(seed + "skin"), wrapperColors, wrapperColors.size) }
+    val skinHash = AvatarUtils.hashCode(name + "skin")
+    val wrapperColor = AvatarUtils.getRandomColor(skinHash, wrapperColors, wrapperColors.size)
 
-    val accIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "acc")) % pixelArtAccessoriesPaths.size }
-    val beardIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "beard")) % pixelArtBeardPaths.size }
-    val clothIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "cloth")) % pixelArtClothingPaths.size }
-    val eyeIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "eye")) % pixelArtEyesPaths.size }
-    val glassIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "glass")) % pixelArtGlassesPaths.size }
-    val hairIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "hair")) % pixelArtHairPaths.size }
-    val hatIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "hat")) % pixelArtHatPaths.size }
-    val mouthIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "mouth")) % pixelArtMouthPaths.size }
+    val accIndex = abs(AvatarUtils.hashCode(name + "acc")) % pixelArtAccessoriesPaths.size
+    val beardIndex = abs(AvatarUtils.hashCode(name + "beard")) % pixelArtBeardPaths.size
+    val clothIndex = abs(AvatarUtils.hashCode(name + "cloth")) % pixelArtClothingPaths.size
+    val eyeIndex = abs(AvatarUtils.hashCode(name + "eye")) % pixelArtEyesPaths.size
+    val glassIndex = abs(AvatarUtils.hashCode(name + "glass")) % pixelArtGlassesPaths.size
+    val hairIndex = abs(AvatarUtils.hashCode(name + "hair")) % pixelArtHairPaths.size
+    val hatIndex = abs(AvatarUtils.hashCode(name + "hat")) % pixelArtHatPaths.size
+    val mouthIndex = abs(AvatarUtils.hashCode(name + "mouth")) % pixelArtMouthPaths.size
 
     val viewPortSize = 16f
 
@@ -536,34 +543,32 @@ fun AvatarPixelArt(
             .clip(shape)
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val scaleX = this.size.width / viewPortSize
-            val scaleY = this.size.height / viewPortSize
+            val scale = this.size.width / PIXEL_ART_VIEWBOX
 
-            drawRect(color = bgColor, size = Size(this.size.width, this.size.height))
+            drawRect(color = bgColor)
 
-            val drawList = { paths: List<SvgPath>, useWrapper: Boolean ->
-                for (p in paths) {
-                    val pathColor = if (useWrapper && p.color == Color(0xFFE0B687)) wrapperColor else (p.color ?: Color.Unspecified)
-                    if (pathColor != Color.Unspecified) {
-                        val path = PathParser().parsePathString(p.d).toPath()
-                        path.fillType = p.fillType
-                        path.transform(androidx.compose.ui.graphics.Matrix().apply { 
-                            scale(scaleX, scaleY)
-                        })
-                        drawPath(path, color = pathColor)
+            scale(scale, pivot = androidx.compose.ui.geometry.Offset.Zero) {
+                fun drawList(paths: List<SvgPath>, useSkin: Boolean) {
+                    for (p in paths) {
+                        val pathColor = if (useSkin && p.color == Color(0xFFE0B687)) wrapperColor else (p.color ?: Color.Unspecified)
+                        if (pathColor != Color.Unspecified) {
+                            val path = PathParser().parsePathString(p.d).toPath()
+                            path.fillType = p.fillType
+                            drawPath(path, color = pathColor)
+                        }
                     }
                 }
-            }
 
-            drawList(pixelArtFaceBgPaths, true)
-            drawList(pixelArtMouthPaths[mouthIndex], false)
-            drawList(pixelArtEyesPaths[eyeIndex], false)
-            drawList(pixelArtClothingPaths[clothIndex], false)
-            drawList(pixelArtBeardPaths[beardIndex], false)
-            drawList(pixelArtHairPaths[hairIndex], false)
-            drawList(pixelArtGlassesPaths[glassIndex], false)
-            drawList(pixelArtHatPaths[hatIndex], false)
-            drawList(pixelArtAccessoriesPaths[accIndex], false)
+                drawList(pixelArtFaceBgPaths, true)
+                drawList(pixelArtMouthPaths[mouthIndex], false)
+                drawList(pixelArtEyesPaths[eyeIndex], false)
+                drawList(pixelArtClothingPaths[clothIndex], false)
+                drawList(pixelArtBeardPaths[beardIndex], false)
+                drawList(pixelArtHairPaths[hairIndex], false)
+                drawList(pixelArtGlassesPaths[glassIndex], false)
+                drawList(pixelArtHatPaths[hatIndex], false)
+                drawList(pixelArtAccessoriesPaths[accIndex], false)
+            }
         }
     }
 }

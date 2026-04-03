@@ -11,8 +11,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import io.github.feliperce.avatar.util.AvatarContext
 import io.github.feliperce.avatar.util.AvatarUtils
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
@@ -30,39 +31,28 @@ internal data class BauhausElement(
     val isSquare: Boolean
 )
 
-internal fun generateBauhausData(name: String, colors: List<Color>): List<BauhausElement> {
-    val numFromName = AvatarUtils.hashCode(name)
-    val range = colors.size
-    return List(BAUHAUS_ELEMENTS) { i ->
-        BauhausElement(
-            color = AvatarUtils.getRandomColor(numFromName + i, colors, range),
-            translateX = AvatarUtils.getUnit(numFromName * (i + 1), (BAUHAUS_SIZE / 2 - (i + 17)).toInt(), 1).toFloat(),
-            translateY = AvatarUtils.getUnit(numFromName * (i + 1), (BAUHAUS_SIZE / 2 - (i + 17)).toInt(), 2).toFloat(),
-            rotate = AvatarUtils.getUnit(numFromName * (i + 1), 360).toFloat(),
-            isSquare = AvatarUtils.getBoolean(numFromName, 2)
-        )
-    }
-}
-
-/**
- * Renders the Bauhaus variant of BoringAvatar.
- * It uses abstract geometric shapes in bold translated/rotated configurations inspired by Bauhaus art.
- *
- * @param name The generated hash base string.
- * @param colors The color palette to pick from.
- * @param size The size of the avatar.
- * @param shape The clipping shape for the canvas.
- * @param modifier Additional compose modifiers.
- */
 @Composable
 fun AvatarBauhaus(
     name: String,
     colors: List<Color>,
-    size: Dp = 40.dp,
-    shape: Shape = CircleShape,
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
     modifier: Modifier = Modifier
 ) {
-    val properties = remember(name, colors) { generateBauhausData(name, colors) }
+    val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }
+
+    val properties = remember(context) {
+        val numFromName = context.numFromName
+        List(BAUHAUS_ELEMENTS) { i ->
+            BauhausElement(
+                color = AvatarUtils.getRandomColor(numFromName + i, colors, context.range),
+                translateX = AvatarUtils.getUnit(numFromName * (i + 1), (BAUHAUS_SIZE / 2 - (i + 17)).toInt(), 1).toFloat(),
+                translateY = AvatarUtils.getUnit(numFromName * (i + 1), (BAUHAUS_SIZE / 2 - (i + 17)).toInt(), 2).toFloat(),
+                rotate = AvatarUtils.getUnit(numFromName * (i + 1), 360).toFloat(),
+                isSquare = AvatarUtils.getBoolean(numFromName, 2)
+            )
+        }
+    }
 
     Canvas(modifier = modifier.size(size).clip(shape)) {
         val scaleFactor = this.size.width / BAUHAUS_SIZE

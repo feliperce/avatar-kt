@@ -8,7 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.feliperce.avatar.variants.*
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 /**
  * Defines the available visual variants for the BoringAvatar.
@@ -46,8 +46,8 @@ fun BoringAvatar(
         AvatarVariant.EMOJI -> AvatarEmoji(name, colors, size, shape, modifier)
         AvatarVariant.WACKY -> AvatarWacky(name, colors, size, shape, modifier)
         AvatarVariant.PIXEL_NEUTRAL -> AvatarPixelNeutral(name, colors, size, shape, modifier)
-        AvatarVariant.PIXEL_ART -> AvatarPixelArt(name, modifier, size, shape, colors)
-        AvatarVariant.PIXEL_ANIMALS -> AvatarPixelAnimals(name, modifier, size, shape, colors)
+        AvatarVariant.PIXEL_ART -> AvatarPixelArt(name, colors, size, shape, modifier)
+        AvatarVariant.PIXEL_ANIMALS -> AvatarPixelAnimals(name, colors, size, shape, modifier)
     }
 }
 

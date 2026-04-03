@@ -21,8 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.graphicsLayer
+import io.github.feliperce.avatar.util.AvatarContext
 import io.github.feliperce.avatar.util.AvatarUtils
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 private const val MARBLE_SIZE = 80f
 private const val ELEMENTS = 3
@@ -35,39 +36,28 @@ internal data class MarbleElement(
     val rotate: Float
 )
 
-internal fun generateMarbleData(name: String, colors: List<Color>): List<MarbleElement> {
-    val numFromName = AvatarUtils.hashCode(name)
-    val range = colors.size
-    return List(ELEMENTS) { i ->
-        MarbleElement(
-            color = AvatarUtils.getRandomColor(numFromName + i, colors, range),
-            translateX = AvatarUtils.getUnit(numFromName * (i + 1), (MARBLE_SIZE / 10).toInt(), 1).toFloat(),
-            translateY = AvatarUtils.getUnit(numFromName * (i + 1), (MARBLE_SIZE / 10).toInt(), 2).toFloat(),
-            scale = 1.2f + AvatarUtils.getUnit(numFromName * (i + 1), (MARBLE_SIZE / 20).toInt()) / 10f,
-            rotate = AvatarUtils.getUnit(numFromName * (i + 1), 360, 1).toFloat()
-        )
-    }
-}
-
-/**
- * Renders the Marble variant of BoringAvatar.
- * It uses overlapping scaled and translated paths with an overlay blend mode to generate a marble-like texture.
- *
- * @param name The generated hash base string.
- * @param colors The color palette to pick from.
- * @param size The size of the avatar.
- * @param shape The clipping shape for the canvas.
- * @param modifier Additional compose modifiers.
- */
 @Composable
 fun AvatarMarble(
     name: String,
     colors: List<Color>,
-    size: Dp = 40.dp,
-    shape: Shape = CircleShape,
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
     modifier: Modifier = Modifier
 ) {
-    val properties = remember(name, colors) { generateMarbleData(name, colors) }
+    val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }
+
+    val properties = remember(context) {
+        val numFromName = context.numFromName
+        List(ELEMENTS) { i ->
+            MarbleElement(
+                color = AvatarUtils.getRandomColor(numFromName + i, colors, context.range),
+                translateX = AvatarUtils.getUnit(numFromName * (i + 1), (MARBLE_SIZE / 10).toInt(), 1).toFloat(),
+                translateY = AvatarUtils.getUnit(numFromName * (i + 1), (MARBLE_SIZE / 10).toInt(), 2).toFloat(),
+                scale = 1.2f + AvatarUtils.getUnit(numFromName * (i + 1), (MARBLE_SIZE / 20).toInt()) / 10f,
+                rotate = AvatarUtils.getUnit(numFromName * (i + 1), 360, 1).toFloat()
+            )
+        }
+    }
 
     val path1 = remember {
         PathParser().parsePathString("M32.414 59.35L50.376 70.5H72.5v-71H33.728L26.5 13.381l19.057 27.08L32.414 59.35z").toPath()

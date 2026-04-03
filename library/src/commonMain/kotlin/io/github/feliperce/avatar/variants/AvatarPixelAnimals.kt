@@ -12,11 +12,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.Shape
+import io.github.feliperce.avatar.util.AvatarContext
+import io.github.feliperce.avatar.util.AvatarUtils
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import io.github.feliperce.avatar.util.AvatarUtils
 import kotlin.math.abs
+
+private const val PIXEL_ANIMALS_VIEWBOX = 16f
 
 private val animalBases = listOf(
     listOf(
@@ -104,18 +107,20 @@ private val animalAccessories = listOf(
  */
 @Composable
 fun AvatarPixelAnimals(
-    seed: String,
-    modifier: Modifier = Modifier,
-    size: Dp = 40.dp,
-    shape: Shape,
-    backgroundColors: List<Color> = listOf(Color(0xFF92A1C6), Color(0xFF146A7C), Color(0xFFF0AB3D), Color(0xFFC271B4), Color(0xFFC20D90))
+    name: String,
+    colors: List<Color>,
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
+    modifier: Modifier = Modifier
 ) {
-    val bgColor = remember(seed) { AvatarUtils.getRandomColor(AvatarUtils.hashCode(seed), backgroundColors, backgroundColors.size) }
+    val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }
+    
+    val bgColor = context.getRandomColor()
 
-    val baseIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "base")) % animalBases.size }
-    val eyesIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "eyes")) % animalEyes.size }
-    val snoutIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "snout")) % animalSnouts.size }
-    val accessoryIndex = remember(seed) { abs(AvatarUtils.hashCode(seed + "acc")) % animalAccessories.size }
+    val baseIndex = abs(AvatarUtils.hashCode(name + "base")) % animalBases.size
+    val eyesIndex = abs(AvatarUtils.hashCode(name + "eyes")) % animalEyes.size
+    val snoutIndex = abs(AvatarUtils.hashCode(name + "snout")) % animalSnouts.size
+    val accessoryIndex = abs(AvatarUtils.hashCode(name + "acc")) % animalAccessories.size
 
     val viewPortSize = 16f
 
@@ -125,29 +130,27 @@ fun AvatarPixelAnimals(
             .clip(shape)
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val scaleX = this.size.width / viewPortSize
-            val scaleY = this.size.height / viewPortSize
+            val scale = this.size.width / PIXEL_ANIMALS_VIEWBOX
 
-            drawRect(color = bgColor, size = Size(this.size.width, this.size.height))
+            drawRect(color = bgColor)
 
-            val drawList = { paths: List<SvgPath> ->
-                for (p in paths) {
-                    val pathColor = p.color ?: Color.Unspecified
-                    if (pathColor != Color.Unspecified) {
-                        val path = PathParser().parsePathString(p.d).toPath()
-                        path.fillType = p.fillType
-                        path.transform(androidx.compose.ui.graphics.Matrix().apply { 
-                            scale(scaleX, scaleY)
-                        })
-                        drawPath(path, color = pathColor)
+            scale(scale, pivot = androidx.compose.ui.geometry.Offset.Zero) {
+                fun drawList(paths: List<SvgPath>) {
+                    for (p in paths) {
+                        val pathColor = p.color ?: Color.Unspecified
+                        if (pathColor != Color.Unspecified) {
+                            val path = PathParser().parsePathString(p.d).toPath()
+                            path.fillType = p.fillType
+                            drawPath(path, color = pathColor)
+                        }
                     }
                 }
-            }
 
-            drawList(animalBases[baseIndex])
-            drawList(animalSnouts[snoutIndex])
-            drawList(animalEyes[eyesIndex])
-            drawList(animalAccessories[accessoryIndex])
+                drawList(animalBases[baseIndex])
+                drawList(animalSnouts[snoutIndex])
+                drawList(animalEyes[eyesIndex])
+                drawList(animalAccessories[accessoryIndex])
+            }
         }
     }
 }

@@ -12,10 +12,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import io.github.feliperce.avatar.util.AvatarUtils
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 
 private const val PIXEL_SIZE = 80f
 private const val PIXEL_ELEMENTS = 64
@@ -30,27 +30,20 @@ internal fun generatePixelColors(name: String, colors: List<Color>): List<Color>
 
 /**
  * Renders the Pixel variant of BoringAvatar.
- * It generates a fixed 8x8 grid map representing a mosaic or pixel pattern.
- *
- * @param name The generated hash base string.
- * @param colors The color palette to pick from.
- * @param size The size of the avatar.
- * @param shape The clipping shape for the canvas.
- * @param modifier Additional compose modifiers.
  */
 @Composable
 fun AvatarPixel(
     name: String,
     colors: List<Color>,
-    size: Dp = 40.dp,
-    shape: Shape = CircleShape,
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
     modifier: Modifier = Modifier
 ) {
     val pixelColors = remember(name, colors) { generatePixelColors(name, colors) }
 
     Canvas(modifier = modifier.size(size).clip(shape)) {
         val scaleFactor = this.size.width / PIXEL_SIZE
-
+        
         scale(scaleFactor, pivot = Offset.Zero) {
             val coords = listOf(
                 0 to 0, 20 to 0, 40 to 0, 60 to 0, 10 to 0, 30 to 0, 50 to 0, 70 to 0,
@@ -75,7 +68,7 @@ fun AvatarPixel(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun AvatarPixelPreview() {
     AvatarPixel(

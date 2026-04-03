@@ -1,15 +1,55 @@
 package io.github.feliperce.avatar.util
 
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.pow
+
+/**
+ * Common context for avatar data generation, bundling the hash and color palette.
+ * This avoids redundant calculations at the start of each variant's data generator.
+ */
+internal data class AvatarContext(
+    val numFromName: Int,
+    val colors: List<Color>
+) {
+    /** The size of the color palette. */
+    val range: Int = if (colors.isEmpty()) 1 else colors.size
+
+    /** Helper to get a random color from the context's palette with an optional offset. */
+    fun getRandomColor(offset: Int = 0): Color =
+        AvatarUtils.getRandomColor(numFromName + offset, colors, range)
+
+    /** Helper to get a constrained unit based on the context's hash. */
+    fun getUnit(maxRange: Int, index: Int? = null): Int =
+        AvatarUtils.getUnit(numFromName, maxRange, index)
+
+    /** Helper to get a boolean value based on the context's hash. */
+    fun getBoolean(ntn: Int): Boolean =
+        AvatarUtils.getBoolean(numFromName, ntn)
+}
 
 /**
  * Utility object for generating predictable pseudorandom data based on a given string name.
  * It is primarily used to ensure that a given name consistently generates the same avatar colors and shapes.
  */
 internal object AvatarUtils {
+
+    /** Default size for all avatars (40.dp). */
+    val DEFAULT_SIZE: Dp = 40.dp
+
+    /** Default shape for all avatars (CircleShape). */
+    val DEFAULT_SHAPE: Shape = CircleShape
+
+    /**
+     * Creates a shared [AvatarContext] for a given name and color palette.
+     */
+    fun createContext(name: String, colors: List<Color>): AvatarContext =
+        AvatarContext(hashCode(name), colors)
 
     /**
      * Generates a positive hash code for a given string name.
@@ -52,7 +92,7 @@ internal object AvatarUtils {
      * @return The adjusted unit integer.
      */
     fun getUnit(number: Int, range: Int, index: Int? = null): Int {
-        val value = number % range
+        val value = if (range == 0) 0 else number % range
         return if (index != null && (getDigit(number, index) % 2) == 0) {
             -value
         } else {

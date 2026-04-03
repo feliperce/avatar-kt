@@ -14,12 +14,15 @@ import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.PathParser
+import io.github.feliperce.avatar.util.AvatarContext
+import io.github.feliperce.avatar.util.AvatarUtils
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import io.github.feliperce.avatar.util.AvatarUtils
-import kotlin.math.abs
+import androidx.compose.ui.tooling.preview.Preview
+
+private const val PIXEL_NEUTRAL_VIEWBOX = 14f
 
 private val pixelEyesPaths = listOf(
         listOf(
@@ -248,52 +251,47 @@ private val pixelGlassesPaths = listOf(
 internal fun AvatarPixelNeutral(
     name: String,
     colors: List<Color>,
-    size: Dp,
-    shape: Shape,
-    modifier: Modifier
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
+    modifier: Modifier = Modifier
 ) {
-    val seed = AvatarUtils.hashCode(name)
+    val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }
+    val seed = context.numFromName
+
     val eyeIndex = seed % pixelEyesPaths.size
     val mouthIndex = (seed / 10) % pixelMouthPaths.size
     val hasGlasses = (seed % 100) > 70
-    val skinColor = colors[seed % colors.size]
+    val skinColor = context.getRandomColor()
     
     val eyesPaths = pixelEyesPaths[eyeIndex]
     val mouthPaths = pixelMouthPaths[mouthIndex]
     val glassesPaths = if (hasGlasses) pixelGlassesPaths[seed % pixelGlassesPaths.size] else emptyList()
     
-    val glassColor = if (colors.size > 1) colors[(seed + 1) % colors.size] else Color.Black
-    val eyesColor = Color.Black
-    val mouthColor = Color.Black
+    val glassColor = if (context.range > 1) colors[(seed + 1) % context.range] else Color.Black
+    val featuresColor = Color.Black
 
-    Box(
-        modifier = modifier
-            .size(size)
-            .clip(shape)
-    ) {
+    Box(modifier = modifier.size(size).clip(shape)) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val scaleX = this.size.width / 14f
-            val scaleY = this.size.height / 14f
+            val scale = this.size.width / PIXEL_NEUTRAL_VIEWBOX
 
             drawRect(color = skinColor)
 
-            fun drawSvgPaths(paths: List<SvgPath>, dynamicColor: Color) {
-                for (p in paths) {
-                    val path = PathParser().parsePathString(p.d).toPath()
-                    path.fillType = p.fillType
-                    path.transform(androidx.compose.ui.graphics.Matrix().apply { 
-                        scale(scaleX, scaleY)
-                    })
-                    drawPath(path, color = p.color ?: dynamicColor)
+            scale(scale, pivot = androidx.compose.ui.geometry.Offset.Zero) {
+                fun drawSvgPaths(paths: List<SvgPath>, dynamicColor: Color) {
+                    for (p in paths) {
+                        val path = PathParser().parsePathString(p.d).toPath()
+                        path.fillType = p.fillType
+                        drawPath(path, color = p.color ?: dynamicColor)
+                    }
                 }
-            }
 
-            translate(left = -1f * scaleX, top = -2f * scaleY) {
-                drawSvgPaths(eyesPaths, eyesColor)
-                drawSvgPaths(glassesPaths, glassColor)
-            }
-            translate(left = -1f * scaleX, top = 0f * scaleY) {
-                drawSvgPaths(mouthPaths, mouthColor)
+                translate(left = -1f, top = -2f) {
+                    drawSvgPaths(eyesPaths, featuresColor)
+                    drawSvgPaths(glassesPaths, glassColor)
+                }
+                translate(left = -1f, top = 0f) {
+                    drawSvgPaths(mouthPaths, featuresColor)
+                }
             }
         }
     }

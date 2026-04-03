@@ -8,22 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.vector.PathParser
-import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import io.github.feliperce.avatar.util.AvatarContext
 import io.github.feliperce.avatar.util.AvatarUtils
-import kotlin.math.abs
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.tooling.preview.Preview
 
-internal data class SvgPath(val d: String, val color: Color?, val fillType: PathFillType)
+private const val WACKY_VIEWBOX = 100f
 
 private val wackyEyesPaths = listOf(
         listOf(
@@ -174,12 +171,12 @@ private val wackyShapePaths = listOf(
 internal fun AvatarWacky(
     name: String,
     colors: List<Color>,
-    size: Dp,
-    shape: Shape,
-    modifier: Modifier
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
+    modifier: Modifier = Modifier
 ) {
-    val seed = AvatarUtils.hashCode(name)
-    val random = kotlin.random.Random(seed.toLong())
+    val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }
+    val random = kotlin.random.Random(context.numFromName.toLong())
 
     val eyeIndex = random.nextInt(wackyEyesPaths.size)
     val mouthIndex = random.nextInt(wackyMouthPaths.size)
@@ -221,22 +218,11 @@ internal fun AvatarWacky(
             .clip(shape)
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val scaleX = this.size.width / 100f
-            val scaleY = this.size.height / 100f
+            val scaleFactor = this.size.width / WACKY_VIEWBOX
 
-            fun drawSvgPaths(paths: List<SvgPath>, dynamicColor: Color) {
-                for (p in paths) {
-                    val path = PathParser().parsePathString(p.d).toPath()
-                    path.fillType = p.fillType
-                    drawPath(path, color = p.color ?: dynamicColor)
-                }
-            }
+            drawRect(backgroundColor)
 
-            withTransform({
-                scale(scaleX, scaleY)
-            }) {
-                drawRect(backgroundColor)
-
+            scale(scaleFactor, pivot = androidx.compose.ui.geometry.Offset.Zero) {
                 withTransform({
                     translate(shapeOffsetX.toFloat(), shapeOffsetY.toFloat())
                     rotate(degrees = shapeRotation.toFloat(), pivot = Offset(50f, 70f))
@@ -253,7 +239,7 @@ internal fun AvatarWacky(
                         }) {
                             drawSvgPaths(eyesPaths, featuresColor)
                         }
-                        
+
                         withTransform({
                             translate(6f, mouthOffset)
                         }) {

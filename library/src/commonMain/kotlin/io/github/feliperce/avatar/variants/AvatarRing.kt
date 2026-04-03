@@ -12,8 +12,9 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import io.github.feliperce.avatar.util.AvatarContext
 import io.github.feliperce.avatar.util.AvatarUtils
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.unit.Dp
@@ -21,44 +22,33 @@ import androidx.compose.ui.unit.dp
 
 private const val RING_SIZE = 90f
 
-internal fun generateRingColors(name: String, colors: List<Color>): List<Color> {
-    val numFromName = AvatarUtils.hashCode(name)
-    val range = colors.size
-    val colorsShuffle = List(5) { i ->
-        AvatarUtils.getRandomColor(numFromName + i, colors, range)
-    }
-    return listOf(
-        colorsShuffle[0],
-        colorsShuffle[1],
-        colorsShuffle[1],
-        colorsShuffle[2],
-        colorsShuffle[2],
-        colorsShuffle[3],
-        colorsShuffle[3],
-        colorsShuffle[0],
-        colorsShuffle[4]
-    )
-}
-
-/**
- * Renders the Ring variant of BoringAvatar.
- * It uses nested circular and semi-circular strokes to form an abstract ringed pattern.
- *
- * @param name The generated hash base string.
- * @param colors The color palette to pick from.
- * @param size The size of the avatar.
- * @param shape The clipping shape for the canvas.
- * @param modifier Additional compose modifiers.
- */
 @Composable
 fun AvatarRing(
     name: String,
     colors: List<Color>,
-    size: Dp = 40.dp,
-    shape: Shape = CircleShape,
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
     modifier: Modifier = Modifier
 ) {
-    val ringColors = remember(name, colors) { generateRingColors(name, colors) }
+    val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }
+
+    val ringColors = remember(context) {
+        val numFromName = context.numFromName
+        val colorsShuffle = List(5) { i ->
+            AvatarUtils.getRandomColor(numFromName + i, colors, context.range)
+        }
+        listOf(
+            colorsShuffle[0],
+            colorsShuffle[1],
+            colorsShuffle[1],
+            colorsShuffle[2],
+            colorsShuffle[2],
+            colorsShuffle[3],
+            colorsShuffle[3],
+            colorsShuffle[0],
+            colorsShuffle[4]
+        )
+    }
 
     Canvas(modifier = modifier.size(size).clip(shape)) {
         val scaleFactor = this.size.width / RING_SIZE

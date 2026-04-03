@@ -13,19 +13,18 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.shape.CircleShape
+import io.github.feliperce.avatar.util.AvatarContext
 import io.github.feliperce.avatar.util.AvatarUtils
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
-private const val SIZE = 36f
-
-internal data class BeamData(
+private data class BeamData(
     val wrapperColor: Color,
     val faceColor: Color,
     val backgroundColor: Color,
@@ -42,52 +41,47 @@ internal data class BeamData(
     val faceTranslateY: Float
 )
 
-internal fun generateBeamData(name: String, colors: List<Color>): BeamData {
-    val numFromName = AvatarUtils.hashCode(name)
-    val range = colors.size
-    val wrapperColor = AvatarUtils.getRandomColor(numFromName, colors, range)
-    val preTranslateX = AvatarUtils.getUnit(numFromName, 10, 1).toFloat()
-    val wrapperTranslateX = if (preTranslateX < 5) preTranslateX + SIZE / 9f else preTranslateX
-    val preTranslateY = AvatarUtils.getUnit(numFromName, 10, 2).toFloat()
-    val wrapperTranslateY = if (preTranslateY < 5) preTranslateY + SIZE / 9f else preTranslateY
-
-    return BeamData(
-        wrapperColor = wrapperColor,
-        faceColor = AvatarUtils.getContrast(wrapperColor),
-        backgroundColor = AvatarUtils.getRandomColor(numFromName + 13, colors, range),
-        wrapperTranslateX = wrapperTranslateX,
-        wrapperTranslateY = wrapperTranslateY,
-        wrapperRotate = AvatarUtils.getUnit(numFromName, 360).toFloat(),
-        wrapperScale = 1f + AvatarUtils.getUnit(numFromName, (SIZE / 12f).toInt()) / 10f,
-        isMouthOpen = AvatarUtils.getBoolean(numFromName, 2),
-        isCircle = AvatarUtils.getBoolean(numFromName, 1),
-        eyeSpread = AvatarUtils.getUnit(numFromName, 5),
-        mouthSpread = AvatarUtils.getUnit(numFromName, 3),
-        faceRotate = AvatarUtils.getUnit(numFromName, 10, 3).toFloat(),
-        faceTranslateX = if (wrapperTranslateX > SIZE / 6f) wrapperTranslateX / 2f else AvatarUtils.getUnit(numFromName, 8, 1).toFloat(),
-        faceTranslateY = if (wrapperTranslateY > SIZE / 6f) wrapperTranslateY / 2f else AvatarUtils.getUnit(numFromName, 7, 2).toFloat()
-    )
-}
+private const val SIZE = 36f
 
 /**
  * Renders the Beam variant of BoringAvatar.
  * It uses geometric shapes and specific transformations to create a unique minimalist face based on the name hash.
- * 
- * @param name The generated hash base string.
- * @param colors The color palette to pick from.
- * @param size The size of the avatar.
- * @param shape The clipping shape for the canvas.
- * @param modifier Additional compose modifiers.
  */
 @Composable
 fun AvatarBeam(
     name: String,
     colors: List<Color>,
-    size: Dp = 40.dp,
-    shape: Shape = CircleShape,
+    size: Dp = AvatarUtils.DEFAULT_SIZE,
+    shape: Shape = AvatarUtils.DEFAULT_SHAPE,
     modifier: Modifier = Modifier
 ) {
-    val data = remember(name, colors) { generateBeamData(name, colors) }
+    val context = remember(name, colors) { AvatarUtils.createContext(name, colors) }
+    
+    val data = remember(context) {
+        val numFromName = context.numFromName
+        val wrapperColor = context.getRandomColor()
+        val preTranslateX = AvatarUtils.getUnit(numFromName, 10, 1).toFloat()
+        val wrapperTranslateX = if (preTranslateX < 5) preTranslateX + SIZE / 9f else preTranslateX
+        val preTranslateY = AvatarUtils.getUnit(numFromName, 10, 2).toFloat()
+        val wrapperTranslateY = if (preTranslateY < 5) preTranslateY + SIZE / 9f else preTranslateY
+
+        BeamData(
+            wrapperColor = wrapperColor,
+            faceColor = AvatarUtils.getContrast(wrapperColor),
+            backgroundColor = AvatarUtils.getRandomColor(numFromName + 13, colors, context.range),
+            wrapperTranslateX = wrapperTranslateX,
+            wrapperTranslateY = wrapperTranslateY,
+            wrapperRotate = AvatarUtils.getUnit(numFromName, 360).toFloat(),
+            wrapperScale = 1f + AvatarUtils.getUnit(numFromName, (SIZE / 12f).toInt()) / 10f,
+            isMouthOpen = AvatarUtils.getBoolean(numFromName, 2),
+            isCircle = AvatarUtils.getBoolean(numFromName, 1),
+            eyeSpread = AvatarUtils.getUnit(numFromName, 5),
+            mouthSpread = AvatarUtils.getUnit(numFromName, 3),
+            faceRotate = AvatarUtils.getUnit(numFromName, 10, 3).toFloat(),
+            faceTranslateX = if (wrapperTranslateX > SIZE / 6f) wrapperTranslateX / 2f else AvatarUtils.getUnit(numFromName, 8, 1).toFloat(),
+            faceTranslateY = if (wrapperTranslateY > SIZE / 6f) wrapperTranslateY / 2f else AvatarUtils.getUnit(numFromName, 7, 2).toFloat()
+        )
+    }
 
     Canvas(modifier = modifier.size(size).clip(shape)) {
         val scaleFactor = size.toPx() / SIZE
@@ -97,7 +91,7 @@ fun AvatarBeam(
 
             translate(data.wrapperTranslateX, data.wrapperTranslateY) {
                 rotate(data.wrapperRotate, pivot = Offset(SIZE / 2f, SIZE / 2f)) {
-                    scale(data.wrapperScale, pivot = Offset(SIZE / 2f, SIZE / 2f)) {
+                    scale(data.wrapperScale, pivot = Offset.Zero) {
                         val rx = if (data.isCircle) SIZE else SIZE / 6f
                         drawRoundRect(
                             color = data.wrapperColor,
@@ -113,12 +107,16 @@ fun AvatarBeam(
                     if (data.isMouthOpen) {
                         val path = Path().apply {
                             moveTo(15f, 19f + data.mouthSpread)
-                            quadraticTo(18f, 20f + data.mouthSpread, 21f, 19f + data.mouthSpread)
+                            cubicTo(
+                                17f, 20f + data.mouthSpread,
+                                19f, 20f + data.mouthSpread,
+                                21f, 19f + data.mouthSpread
+                            )
                         }
                         drawPath(
                             path = path,
                             color = data.faceColor,
-                            style = Stroke(width = 1f)
+                            style = Stroke(width = 1f, cap = StrokeCap.Round)
                         )
                     } else {
                         val path = Path().apply {
@@ -126,9 +124,9 @@ fun AvatarBeam(
                             arcTo(
                                 rect = Rect(
                                     left = 13f,
-                                    top = 18.25f + data.mouthSpread,
+                                    top = 15.25f + data.mouthSpread,
                                     right = 23f,
-                                    bottom = 19.75f + data.mouthSpread
+                                    bottom = 22.75f + data.mouthSpread
                                 ),
                                 startAngleDegrees = 0f,
                                 sweepAngleDegrees = 180f,
