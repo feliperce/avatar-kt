@@ -11,6 +11,9 @@
 
 A Kotlin Multiplatform (KMP) library that generates unique, deterministic avatars completely offline using Compose Multiplatform Canvas. Based on [Boring Avatars](https://github.com/boringdesigners/boring-avatars) and [DiceBear](https://github.com/dicebear/dicebear).
 
+<img width="982" height="388" alt="Captura de tela de 2026-04-02 20-41-57" src="https://github.com/user-attachments/assets/983f92fd-eb33-4433-91de-f06333d69193" />
+
+
 ## Supported Platforms
 - Android
 - iOS
